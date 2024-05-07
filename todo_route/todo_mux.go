@@ -10,9 +10,9 @@ import (
 	"github.com/submodule-org/submodule.go"
 )
 
-var get = submodule.Make[common.Registry](func() common.Registry {
+var get = submodule.Make[common.Registry](func(svc todo_svc.TodoSvc) common.Registry {
 	return common.Registry{
-		Path: "GET /{id}",
+		Path: "GET /todo/{id}",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "GET Hello World!")
 		},
@@ -21,7 +21,7 @@ var get = submodule.Make[common.Registry](func() common.Registry {
 
 var insert = submodule.Make[common.Registry](func() common.Registry {
 	return common.Registry{
-		Path: "POST /",
+		Path: "POST /todo",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "POST Hello World!")
 		},
@@ -30,11 +30,11 @@ var insert = submodule.Make[common.Registry](func() common.Registry {
 
 var delete = submodule.Make[common.Registry](func() common.Registry {
 	return common.Registry{
-		Path: "DELETE /{id}",
+		Path: "DELETE /todo/{id}",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "DELETE Hello World!")
 		},
 	}
 }, todo_svc.TodoSvcMod)
 
-var TodoMuxMod = common.MakeMuxMod("/todo/", get, insert, delete)
+var Registries = submodule.Group[common.Registry](get, insert, delete)

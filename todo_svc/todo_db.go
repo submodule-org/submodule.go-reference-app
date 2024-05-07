@@ -14,7 +14,7 @@ var todoSchema = &memdb.DBSchema{
 				"id": {
 					Name:    "id",
 					Unique:  true,
-					Indexer: &memdb.StringFieldIndex{Field: "ID"},
+					Indexer: &memdb.StringFieldIndex{Field: "Id"},
 				},
 			},
 		},

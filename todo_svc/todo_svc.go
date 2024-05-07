@@ -38,7 +38,7 @@ func (t *todoSvc) Get(ctx context.Context, id string) (c common.Todo, e error) {
 	txn := t.db.Txn(false)
 	defer txn.Abort()
 
-	x, e := txn.First("todo", id)
+	x, e := txn.First("todo", "id", id)
 	return x.(common.Todo), nil
 }
 
