@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"reference/common"
 	"reference/config"
 	"reference/env"
+	rh "reference/http"
 	"reference/logger"
 
 	"github.com/submodule-org/submodule.go"
@@ -18,7 +18,7 @@ type server struct {
 	Config config.Config
 	Logger *zap.Logger
 	AppEnv env.AppEnv
-	Routes []common.Mux
+	Routes []rh.Mux
 }
 
 type Server interface {

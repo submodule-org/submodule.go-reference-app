@@ -2,6 +2,7 @@ package todo_svc
 
 import (
 	"context"
+	"errors"
 	"reference/common"
 
 	"github.com/hashicorp/go-memdb"
@@ -20,6 +21,7 @@ type TodoSvc interface {
 
 func (t *todoSvc) Insert(ctx context.Context, todo common.Todo) (c common.Todo, e error) {
 	txn := t.Db.Txn(true)
+	defer txn.Commit()
 
 	nextId := common.NextId()
 	todo.Id = nextId
@@ -39,19 +41,26 @@ func (t *todoSvc) Get(ctx context.Context, id string) (c common.Todo, e error) {
 	defer txn.Abort()
 
 	x, e := txn.First("todo", "id", id)
+	if e != nil {
+		return
+	}
+
+	if x == nil {
+		return c, errors.New("todo not found")
+	}
+
 	return x.(common.Todo), nil
 }
 
 func (t *todoSvc) Delete(ctx context.Context, id string) (c common.Todo, e error) {
 	txn := t.Db.Txn(true)
-	defer txn.Abort()
+	defer txn.Commit()
 
-	x, e := txn.First("todo", id)
+	todo, e := t.Get(ctx, id)
 	if e != nil {
 		return
 	}
 
-	todo := x.(common.Todo)
 	todo.Done = true
 
 	e = txn.Delete("todo", todo)

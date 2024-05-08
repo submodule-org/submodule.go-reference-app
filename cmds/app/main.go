@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"reference/common"
+	rh "reference/http"
 	"reference/logger"
 	"reference/server"
 
@@ -23,7 +24,7 @@ func main() {
 
 	logger := logger.LoggerMod.Resolve()
 	submodule.AppendGlobalMiddleware(
-		submodule.WithScopeResolve(func(r common.Registry) common.Registry {
+		submodule.WithScopeResolve(func(r rh.Registry) rh.Registry {
 			o := r.Handler
 			r.Handler = func(w http.ResponseWriter, r *http.Request) {
 				contextWithId := context.WithValue(r.Context(), "id", common.NextId())

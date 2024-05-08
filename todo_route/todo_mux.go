@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"net/http"
 
-	"reference/common"
+	rh "reference/http"
 	"reference/todo_svc"
 
 	"github.com/submodule-org/submodule.go"
 )
 
-var get = submodule.Make[common.Registry](func(svc todo_svc.TodoSvc) common.Registry {
-	return common.Registry{
+var get = submodule.Make[rh.Registry](func(svc todo_svc.TodoSvc) rh.Registry {
+	return rh.Registry{
 		Path: "GET /todo/{id}",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "GET Hello World!")
@@ -19,8 +19,8 @@ var get = submodule.Make[common.Registry](func(svc todo_svc.TodoSvc) common.Regi
 	}
 }, todo_svc.TodoSvcMod)
 
-var insert = submodule.Make[common.Registry](func() common.Registry {
-	return common.Registry{
+var insert = submodule.Make[rh.Registry](func() rh.Registry {
+	return rh.Registry{
 		Path: "POST /todo",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "POST Hello World!")
@@ -28,8 +28,8 @@ var insert = submodule.Make[common.Registry](func() common.Registry {
 	}
 }, todo_svc.TodoSvcMod)
 
-var delete = submodule.Make[common.Registry](func() common.Registry {
-	return common.Registry{
+var delete = submodule.Make[rh.Registry](func() rh.Registry {
+	return rh.Registry{
 		Path: "DELETE /todo/{id}",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "DELETE Hello World!")
@@ -37,4 +37,4 @@ var delete = submodule.Make[common.Registry](func() common.Registry {
 	}
 }, todo_svc.TodoSvcMod)
 
-var Route = common.MakeMuxMod("/todo", get, insert, delete)
+var Route = rh.MakeMuxMod("/todo", get, insert, delete)

@@ -22,3 +22,7 @@ func randSeq(n int) string {
 func NextId() string {
 	return randSeq(8)
 }
+
+func NextInt(start int, end int) int {
+	return rand.Intn(end-start) + start
+}
