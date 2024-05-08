@@ -42,7 +42,7 @@ func loadEnv(env env.AppEnv, logger *zap.Logger) {
 
 	if env.IsTest() {
 		configError = godotenv.Load(".env.test")
-		if e != nil {
+		if configError != nil {
 			logger.Info("Failed to load .env.test file", zap.Error(configError))
 		} else {
 			logger.Info("Loaded .env.test file")
@@ -50,7 +50,7 @@ func loadEnv(env env.AppEnv, logger *zap.Logger) {
 	}
 
 	configError = godotenv.Load()
-	if e != nil {
+	if configError != nil {
 		logger.Info("Failed to load .env file", zap.Error(configError))
 	} else {
 		logger.Info("Loaded .env file")
