@@ -1,8 +1,10 @@
 package common
 
 import (
+	"fmt"
 	"net/http"
 	"reference/logger"
+	"strings"
 
 	"github.com/submodule-org/submodule.go"
 	"go.uber.org/zap"
@@ -19,6 +21,10 @@ type Mux struct {
 }
 
 func MakeMuxMod(path string, registries ...submodule.Retrievable) submodule.Submodule[Mux] {
+	path = strings.TrimSpace(path)
+	path = strings.TrimPrefix(path, "/")
+	path = strings.TrimSuffix(path, "/")
+	path = fmt.Sprintf("/%s/", path)
 
 	rs := submodule.Group[Registry](registries...)
 
@@ -26,7 +32,6 @@ func MakeMuxMod(path string, registries ...submodule.Retrievable) submodule.Subm
 		mux := http.NewServeMux()
 
 		for _, registry := range handlers {
-			logger.Info("Registering handler", zap.String("path", registry.Path))
 			mux.HandleFunc(registry.Path, registry.Handler)
 		}
 

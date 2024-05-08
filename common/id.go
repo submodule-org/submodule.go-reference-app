@@ -1,4 +1,4 @@
-package todo_svc
+package common
 
 import (
 	"math/rand"
@@ -19,6 +19,6 @@ func randSeq(n int) string {
 	return string(b)
 }
 
-func nextId() string {
+func NextId() string {
 	return randSeq(8)
 }

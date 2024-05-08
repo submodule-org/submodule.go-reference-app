@@ -18,7 +18,7 @@ type server struct {
 	Config config.Config
 	Logger *zap.Logger
 	AppEnv env.AppEnv
-	Routes [][]common.Registry
+	Routes []common.Mux
 }
 
 type Server interface {
@@ -33,11 +33,9 @@ func (s *server) Start() error {
 
 	r := &http.ServeMux{}
 
-	for _, registries := range s.Routes {
-		for _, registry := range registries {
-			s.Logger.Info("Registering handler", zap.String("path", registry.Path))
-			r.HandleFunc(registry.Path, registry.Handler)
-		}
+	for _, route := range s.Routes {
+		s.Logger.Info("Registering route", zap.String("path", route.Path), zap.Any("router", route.Mux))
+		r.Handle(route.Path, route.Mux)
 	}
 
 	return http.ListenAndServe(fmt.Sprintf(":%d", s.Config.ServerPort), r)

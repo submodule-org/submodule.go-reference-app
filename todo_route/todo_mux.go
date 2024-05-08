@@ -37,4 +37,4 @@ var delete = submodule.Make[common.Registry](func() common.Registry {
 	}
 }, todo_svc.TodoSvcMod)
 
-var Registries = submodule.Group[common.Registry](get, insert, delete)
+var Route = common.MakeMuxMod("/todo", get, insert, delete)

@@ -26,10 +26,23 @@ func main() {
 		submodule.WithScopeResolve(func(r common.Registry) common.Registry {
 			o := r.Handler
 			r.Handler = func(w http.ResponseWriter, r *http.Request) {
-				logger.Info("Request", zap.String("path", r.URL.Path))
-				defer logger.Info("Response", zap.String("path", r.URL.Path))
+				contextWithId := context.WithValue(r.Context(), "id", common.NextId())
+				r = r.WithContext(contextWithId)
+
+				st := time.Now()
+				logger.Info("Request",
+					zap.String("id", r.Context().Value("id").(string)),
+					zap.String("method", r.Method),
+					zap.String("path", r.URL.Path))
 
 				o(w, r)
+
+				logger.Info("Response",
+					zap.String("id", r.Context().Value("id").(string)),
+					zap.String("method", r.Method),
+					zap.String("path", r.URL.Path),
+					zap.Duration("duration", time.Since(st)),
+				)
 			}
 
 			return r

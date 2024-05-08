@@ -9,7 +9,7 @@ import (
 )
 
 type todoSvc struct {
-	db *memdb.MemDB
+	Db *memdb.MemDB
 }
 
 type TodoSvc interface {
@@ -19,9 +19,9 @@ type TodoSvc interface {
 }
 
 func (t *todoSvc) Insert(ctx context.Context, todo common.Todo) (c common.Todo, e error) {
-	txn := t.db.Txn(true)
+	txn := t.Db.Txn(true)
 
-	nextId := nextId()
+	nextId := common.NextId()
 	todo.Id = nextId
 
 	e = txn.Insert("todo", todo)
@@ -35,7 +35,7 @@ func (t *todoSvc) Insert(ctx context.Context, todo common.Todo) (c common.Todo, 
 }
 
 func (t *todoSvc) Get(ctx context.Context, id string) (c common.Todo, e error) {
-	txn := t.db.Txn(false)
+	txn := t.Db.Txn(false)
 	defer txn.Abort()
 
 	x, e := txn.First("todo", "id", id)
@@ -43,7 +43,7 @@ func (t *todoSvc) Get(ctx context.Context, id string) (c common.Todo, e error) {
 }
 
 func (t *todoSvc) Delete(ctx context.Context, id string) (c common.Todo, e error) {
-	txn := t.db.Txn(true)
+	txn := t.Db.Txn(true)
 	defer txn.Abort()
 
 	x, e := txn.First("todo", id)
